@@ -1,0 +1,154 @@
+# Project Title:  
+**Property Onboarding Multi-Page Form**
+
+---
+
+## Overview  
+Develop a multi-page online form titled **"Property Onboarding"**. This form should feature slide transitions between steps, include a progress bar that visually indicates completion, and store all form data in a Supabase database. The form must also include client-side and server-side validations where applicable. Data synchronization should be set up so that all entries are reliably saved to a Supabase table in real time.
+
+---
+
+## Form Structure & Navigation
+
+### 1. Multi-Page (Slide) Design
+- Each section of the form should be a distinct slide or page.
+- Implement smooth transitions (e.g., fade or slide effects) between pages.
+- Include “Next” and “Back” buttons for navigation.
+- A progress bar at the top of each slide must update as the user completes each section.
+
+### 2. Responsive & Accessible
+- The form should be fully responsive (mobile, tablet, desktop).
+- Follow accessibility best practices (e.g., keyboard navigation, screen reader support).
+
+### 3. Data Persistence
+- Each change should be saved to the Supabase database to prevent data loss.
+- Implement a sync mechanism that keeps the Supabase table updated in real time.
+
+---
+
+## Form Sections & Fields
+
+### 1. Property Information
+- **Property Name:** Text input, required.
+- **Registration Number:** Text input, required, validate format if applicable.
+
+### 2. Contact Information
+- **Contact Person Full Name:** Text input, required.
+- **Phone:** Phone number input, required, with proper validation.
+- **Email:** Email input, required, validate email format.
+- **Website:** URL input, optional but validate URL if provided.
+
+### 3. Financial Information
+- **Currency:** Dropdown with options: USD, GBP, EUR, ZAR.
+- **Billing Address:** Text area or text input, required.
+- **Billing City:** Text input, required.
+- **Billing Postal:** Text input, required.
+- **Billing Country:** Text input or country dropdown, required.
+
+### 4. Activity
+- **List of Safari Guides:**  
+  - Allow users to add multiple safari guides dynamically with an “Add” (plus) button.
+  - Each guide entry should capture at least the guide’s name and role.
+- **List of Activities Available:**  
+  - Enable multiple entries via an “Add” (plus) button.
+  - Capture details such as activity name and description.
+
+### 5. Management Team with Email
+- **General Manager:**  
+  - Name: Text input, required.
+  - Email: Email input, required.
+- **Department Managers:**  
+  - Provide an “Add Manager” (plus) button for multiple department manager entries.
+  - For each, capture name and email, with email validation.
+
+### 6. Facility Details
+- **Number of Rooms Available:** Numeric input, required.
+- **WiFi Details:**  
+  - Network Name: Text input, required.
+  - Password: Password/text input (with the option to reveal/hide), required.
+- **Night Porter:**  
+  - Email: Email input, required if applicable.
+  - Phone Number: Phone input, required, with validation.
+
+### 7. Documents (Optional)
+- **Multiple File Upload:**  
+  - Allow users to attach multiple documents.
+  - Accepted file types: PDF, JPG, PNG.
+- **CI Upload:**  
+  - Separate section for uploading corporate identity assets (logos, CI guides).
+- **Property Documents:**  
+  - For items like info packs, magazines, brochures.
+- **Current Forms:**  
+  - File uploads for forms such as indemnity and review forms.
+
+### 8. User Access
+- **User Emails:**  
+  - Allow the entry of 1-3 email addresses.
+  - Provide an “Add Email” (plus) button for additional entries.
+  - Validate each email for proper format.
+
+---
+
+## Supabase Integration
+
+### 1. Database Table Setup
+- Create a Supabase table named `property_onboarding` with columns corresponding to each field above.
+- Use appropriate data types (e.g., text for strings, numeric for room count, JSON/array for multiple entries like safari guides, activities, department managers, and user emails).
+
+#### Example Schema:
+- `id` (primary key, UUID or auto-increment)
+- `property_name` (text)
+- `registration_number` (text)
+- `contact_full_name` (text)
+- `contact_phone` (text)
+- `contact_email` (text)
+- `contact_website` (text)
+- `currency` (text)
+- `billing_address` (text)
+- `billing_city` (text)
+- `billing_postal` (text)
+- `billing_country` (text)
+- `safari_guides` (JSON/array)
+- `activities` (JSON/array)
+- `general_manager` (JSON with keys: name, email)
+- `department_managers` (JSON/array)
+- `rooms_available` (integer)
+- `wifi_details` (JSON with keys: network_name, password)
+- `night_porter` (JSON with keys: email, phone)
+- `documents` (JSON/array with file paths or URLs)
+- `ci_uploads` (JSON/array with file paths or URLs)
+- `property_documents` (JSON/array with file paths or URLs)
+- `current_forms` (JSON/array with file paths or URLs)
+- `user_access_emails` (array/text or JSON array)
+
+### 2. Data Sync
+- Implement API endpoints or direct Supabase client integration in your form code that syncs form data to the `property_onboarding` table upon form submission (or even on each step change for auto-save).
+- Ensure error handling and feedback to the user if the sync fails.
+- Optionally, implement real-time updates if multiple users might be editing the same entry (if needed).
+
+### 3. Security & Validation
+- Use Supabase Row Level Security (RLS) to control who can insert or update records.
+- Validate data both on the client side (before sending) and on the server side (within Supabase functions or triggers).
+
+---
+
+## Additional Considerations
+
+- **User Experience (UX):**
+  - Ensure that the progress bar accurately reflects the user’s current position in the onboarding process.
+  - Include tooltips or helper text for fields that might need additional explanation (e.g., file types accepted, format for registration numbers).
+
+- **Form Validation:**
+  - Implement client-side validation (e.g., required fields, email formats, phone number formats).
+  - Provide clear error messages and inline feedback.
+
+- **File Uploads:**
+  - Handle file uploads asynchronously and show upload progress.
+  - Store files in a designated Supabase storage bucket and save the file URLs in the table.
+
+- **Transition Effects:**
+  - Use CSS or JavaScript libraries (such as React-Spring for React or similar) to achieve smooth slide transitions.
+
+- **Final Submission:**
+  - On completing the final step, include a review screen where users can confirm all details before final submission.
+  - Ensure the final submission triggers the complete sync with Supabase, and show a confirmation message upon success.
